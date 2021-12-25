@@ -1,6 +1,7 @@
 package com.google.modules.system.service;
 
-import com.google.modules.system.service.dto.UserDto;
+import com.google.modules.system.service.dto.UserDTO;
+
 /**
  * @author iris
  */
@@ -11,5 +12,5 @@ public interface UserService {
      * @param userName /
      * @return /
      */
-    UserDto findByName(String userName);
+    UserDTO findByName(String userName);
 }

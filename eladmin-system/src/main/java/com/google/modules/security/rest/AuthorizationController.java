@@ -7,8 +7,8 @@ import com.google.modules.security.config.bean.LoginCodeEnum;
 import com.google.modules.security.config.bean.LoginProperties;
 import com.google.modules.security.config.bean.SecurityProperties;
 import com.google.modules.security.security.TokenProvider;
-import com.google.modules.security.service.dto.AuthUserDto;
-import com.google.modules.security.service.dto.JwtUserDto;
+import com.google.modules.security.service.dto.AuthUserDTO;
+import com.google.modules.security.service.dto.JwtUserDTO;
 import com.google.utils.RedisUtils;
 import com.google.utils.SecurityUtils;
 import com.wf.captcha.base.Captcha;
@@ -47,13 +47,13 @@ public class AuthorizationController {
 
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")
-    public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDto authUser) {
+    public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDTO authUser) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(authUser.getUsername(), authUser.getPassword());
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = tokenProvider.createToken(authentication);
-        final JwtUserDto jwtUserDto = (JwtUserDto) authentication.getPrincipal();
+        final JwtUserDTO jwtUserDto = (JwtUserDTO) authentication.getPrincipal();
         // 返回 token 与 用户信息
         Map<String, Object> authInfo = new HashMap<String, Object>(2) {{
             put("token", properties.getTokenStartWith() + token);

@@ -1,7 +1,7 @@
 package com.google.modules.system.service.impl;
 
 import com.google.modules.system.service.RoleService;
-import com.google.modules.system.service.dto.UserDto;
+import com.google.modules.system.service.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl implements RoleService {
 
     @Override
-    public List<GrantedAuthority> mapToGrantedAuthorities(UserDto user) {
+    public List<GrantedAuthority> mapToGrantedAuthorities(UserDTO user) {
         Set<String> permissions = new HashSet<>();
         // 如果是管理员直接返回
         if (user.getIsAdmin()) {

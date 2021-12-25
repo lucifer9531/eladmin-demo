@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
  */
 @Getter
 @Setter
-public class AuthUserDto {
+public class AuthUserDTO {
 
     @NotBlank
     private String username;

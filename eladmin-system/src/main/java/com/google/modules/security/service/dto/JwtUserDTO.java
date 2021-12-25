@@ -1,7 +1,7 @@
 package com.google.modules.security.service.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.google.modules.system.service.dto.UserDto;
+import com.google.modules.system.service.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,9 +13,9 @@ import java.util.List;
  */
 @Getter
 @AllArgsConstructor
-public class JwtUserDto implements UserDetails {
+public class JwtUserDTO implements UserDetails {
 
-    private final UserDto user;
+    private final UserDTO user;
 
     @JSONField(serialize = false)
     private final List<GrantedAuthority> authorities;

@@ -12,6 +12,7 @@
     <modules>
         <module>eladmin-common</module>
         <module>eladmin-system</module>
+        <module>eladmin-tools</module>
     </modules>
 
     <name>ANT-DESIGN-PRO 后台管理</name>

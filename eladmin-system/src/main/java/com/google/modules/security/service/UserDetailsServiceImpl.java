@@ -3,10 +3,10 @@ package com.google.modules.security.service;
 import com.google.exception.BadRequestException;
 import com.google.exception.EntityNotFoundException;
 import com.google.modules.security.config.bean.LoginProperties;
-import com.google.modules.security.service.dto.JwtUserDto;
+import com.google.modules.security.service.dto.JwtUserDTO;
 import com.google.modules.system.service.RoleService;
 import com.google.modules.system.service.UserService;
-import com.google.modules.system.service.dto.UserDto;
+import com.google.modules.system.service.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,15 +31,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
 
-    final static Map<String, Future<JwtUserDto>> USER_DTO_CACHE = new ConcurrentHashMap<>();
+    final static Map<String, Future<JwtUserDTO>> USER_DTO_CACHE = new ConcurrentHashMap<>();
     public static ExecutorService executor = newThreadPool();
 
     @Override
-    public JwtUserDto loadUserByUsername(String username) {
-        JwtUserDto jwtUserDto = null;
-        Future<JwtUserDto> future = USER_DTO_CACHE.get(username);
+    public JwtUserDTO loadUserByUsername(String username) {
+        JwtUserDTO jwtUserDto = null;
+        Future<JwtUserDTO> future = USER_DTO_CACHE.get(username);
         if (!loginProperties.isCacheEnable()) {
-            UserDto user;
+            UserDTO user;
             try {
                 user = userService.findByName(username);
             } catch (EntityNotFoundException e) {
@@ -52,7 +52,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 if (!user.getEnabled()) {
                     throw new BadRequestException("账号未激活！");
                 }
-                jwtUserDto = new JwtUserDto(
+                jwtUserDto = new JwtUserDTO(
                         user,
                         roleService.mapToGrantedAuthorities(user)
                 );
@@ -61,8 +61,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
 
         if (future == null) {
-            Callable<JwtUserDto> call = () -> getJwtBySearchDb(username);
-            FutureTask<JwtUserDto> ft = new FutureTask<>(call);
+            Callable<JwtUserDTO> call = () -> getJwtBySearchDb(username);
+            FutureTask<JwtUserDTO> ft = new FutureTask<>(call);
             future = USER_DTO_CACHE.putIfAbsent(username, ft);
             if (future == null) {
                 future = ft;
@@ -86,8 +86,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     }
 
-    private JwtUserDto getJwtBySearchDb(String username) {
-        UserDto user;
+    private JwtUserDTO getJwtBySearchDb(String username) {
+        UserDTO user;
         try {
             user = userService.findByName(username);
         } catch (EntityNotFoundException e) {
@@ -100,7 +100,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             if (!user.getEnabled()) {
                 throw new BadRequestException("账号未激活！");
             }
-            return new JwtUserDto(
+            return new JwtUserDTO(
                     user,
                     roleService.mapToGrantedAuthorities(user)
             );

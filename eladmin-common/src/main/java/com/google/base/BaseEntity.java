@@ -1,11 +1,11 @@
 package com.google.base;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
@@ -18,18 +18,20 @@ import java.sql.Timestamp;
 @Setter
 public class BaseEntity implements Serializable {
 
-    @CreatedBy
+    @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty(value = "创建人", hidden = true)
     private String createBy;
 
-    @LastModifiedBy
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     @ApiModelProperty(value = "更新人", hidden = true)
     private String updateBy;
 
     @ApiModelProperty(value = "创建时间", hidden = true)
+    @TableField(fill = FieldFill.INSERT)
     private Timestamp createTime;
 
     @ApiModelProperty(value = "更新时间", hidden = true)
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private Timestamp updateTime;
 
     /* 分组校验 */

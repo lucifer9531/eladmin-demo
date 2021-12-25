@@ -1,6 +1,6 @@
 package com.google.modules.system.service;
 
-import com.google.modules.system.service.dto.UserDto;
+import com.google.modules.system.service.dto.UserDTO;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
@@ -14,5 +14,5 @@ public interface RoleService {
      * @param user 用户信息
      * @return 权限信息
      */
-    List<GrantedAuthority> mapToGrantedAuthorities(UserDto user);
+    List<GrantedAuthority> mapToGrantedAuthorities(UserDTO user);
 }

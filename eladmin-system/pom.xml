@@ -26,6 +26,12 @@
             <version>2.6</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google</groupId>
+            <artifactId>eladmin-tools</artifactId>
+            <version>2.6</version>
+        </dependency>
+
         <!-- jwt -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
