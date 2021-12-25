@@ -5,6 +5,8 @@ import com.google.modules.security.security.JwtAccessDeniedHandler;
 import com.google.modules.security.security.JwtAuthenticationEntryPoint;
 import com.google.modules.security.security.TokenConfigurer;
 import com.google.modules.security.security.TokenProvider;
+import com.google.modules.security.service.OnlineUserService;
+import com.google.modules.security.service.UserCacheClean;
 import com.google.utils.enums.RequestMethodEnum;
 import lombok.RequiredArgsConstructor;
 import com.google.modules.security.config.bean.SecurityProperties;
@@ -43,6 +45,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final ApplicationContext applicationContext;
     private final SecurityProperties properties;
+    private final OnlineUserService onlineUserService;
+    private final UserCacheClean userCacheClean;
 
     @Bean
     GrantedAuthorityDefaults grantedAuthorityDefaults() {
@@ -122,7 +126,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private TokenConfigurer securityConfigurerAdapter() {
-        return new TokenConfigurer(tokenProvider, properties);
+        return new TokenConfigurer(tokenProvider, properties, onlineUserService, userCacheClean);
     }
 
     private Map<String, Set<String>> getAnonymousUrl(Map<RequestMappingInfo, HandlerMethod> handlerMethodMap) {

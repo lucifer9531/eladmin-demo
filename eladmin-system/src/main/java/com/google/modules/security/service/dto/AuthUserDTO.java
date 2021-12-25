@@ -16,4 +16,7 @@ public class AuthUserDTO {
 
     @NotBlank
     private String password;
+
+//    private String uuid;
+//    private String code;
 }

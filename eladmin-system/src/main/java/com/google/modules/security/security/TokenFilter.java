@@ -2,6 +2,10 @@ package com.google.modules.security.security;
 
 import cn.hutool.core.util.StrUtil;
 import com.google.modules.security.config.bean.SecurityProperties;
+import com.google.modules.security.service.OnlineUserService;
+import com.google.modules.security.service.UserCacheClean;
+import com.google.modules.security.service.dto.OnlineUserDTO;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -15,6 +19,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @author iris
@@ -25,14 +30,20 @@ public class TokenFilter extends GenericFilterBean {
 
     private final TokenProvider tokenProvider;
     private final SecurityProperties properties;
+    private final OnlineUserService onlineUserService;
+    private final UserCacheClean userCacheClean;
 
     /**
      * @param tokenProvider     Token
      * @param properties        JWT
+     * @param onlineUserService 用户在线
+     * @param userCacheClean    用户缓存清理工具
      */
-    public TokenFilter(TokenProvider tokenProvider, SecurityProperties properties) {
-        this.tokenProvider = tokenProvider;
+    public TokenFilter(TokenProvider tokenProvider, SecurityProperties properties, OnlineUserService onlineUserService, UserCacheClean userCacheClean) {
         this.properties = properties;
+        this.onlineUserService = onlineUserService;
+        this.tokenProvider = tokenProvider;
+        this.userCacheClean = userCacheClean;
     }
 
     @Override
@@ -42,7 +53,19 @@ public class TokenFilter extends GenericFilterBean {
         String token = resolveToken(httpServletRequest);
         // 对于 Token 为空的不需要去查 Redis
         if (StrUtil.isNotBlank(token)) {
-            if (StringUtils.hasText(token)) {
+            OnlineUserDTO onlineUserDto = null;
+            boolean cleanUserCache = false;
+            try {
+                onlineUserDto = onlineUserService.getOne(properties.getOnlineKey() + token);
+            } catch (ExpiredJwtException e) {
+                log.error(e.getMessage());
+                cleanUserCache = true;
+            } finally {
+                if (cleanUserCache || Objects.isNull(onlineUserDto)) {
+                    userCacheClean.cleanUserCache(String.valueOf(tokenProvider.getClaims(token).get(TokenProvider.AUTHORITIES_KEY)));
+                }
+            }
+            if (onlineUserDto != null && StringUtils.hasText(token)) {
                 Authentication authentication = tokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 // Token 续期
