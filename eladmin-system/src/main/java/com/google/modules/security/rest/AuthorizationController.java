@@ -4,6 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import com.google.annotation.rest.AnonymousDeleteMapping;
 import com.google.annotation.rest.AnonymousGetMapping;
 import com.google.annotation.rest.AnonymousPostMapping;
+import com.google.config.RsaProperties;
 import com.google.exception.BadRequestException;
 import com.google.modules.security.config.bean.LoginCodeEnum;
 import com.google.modules.security.config.bean.LoginProperties;
@@ -13,6 +14,7 @@ import com.google.modules.security.service.OnlineUserService;
 import com.google.modules.security.service.dto.AuthUserDTO;
 import com.google.modules.security.service.dto.JwtUserDTO;
 import com.google.utils.RedisUtils;
+import com.google.utils.RsaUtils;
 import com.google.utils.SecurityUtils;
 import com.wf.captcha.base.Captcha;
 import io.swagger.annotations.Api;
@@ -54,20 +56,22 @@ public class AuthorizationController {
 
     @ApiOperation("登录授权")
     @AnonymousPostMapping(value = "/login")
-    public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDTO authUser, HttpServletRequest request) {
-         // 查询验证码
-        // String code = (String) redisUtils.get(authUser.getUuid());
+    public ResponseEntity<Object> login(@Validated @RequestBody AuthUserDTO authUser, HttpServletRequest request) throws Exception {
+        // 解密密码
+        String password = RsaUtils.decryptByPrivateKey(RsaProperties.privateKey, authUser.getPassword());
+        // 查询验证码
+         String code = (String) redisUtils.get(authUser.getUuid());
         // 清除验证码
-        // redisUtils.del(authUser.getUuid());
-//        if (StringUtils.isBlank(code)) {
-//            throw new BadRequestException("验证码不存在或已过期");
-//        }
-//        if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
-//            throw new BadRequestException("验证码错误");
-//        }
+         redisUtils.del(authUser.getUuid());
+        if (StringUtils.isBlank(code)) {
+            throw new BadRequestException("验证码不存在或已过期");
+        }
+        if (StringUtils.isBlank(authUser.getCode()) || !authUser.getCode().equalsIgnoreCase(code)) {
+            throw new BadRequestException("验证码错误");
+        }
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(authUser.getUsername(), authUser.getPassword());
+                new UsernamePasswordAuthenticationToken(authUser.getUsername(), password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = tokenProvider.createToken(authentication);
