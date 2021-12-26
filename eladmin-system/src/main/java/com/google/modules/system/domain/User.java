@@ -29,10 +29,6 @@ public class User implements Serializable {
     @ApiModelProperty(value = "ID", hidden = true)
     private Long id;
 
-    @ApiModelProperty(value = "用户角色")
-    @TableField(exist = false)
-    private Set<Role> roles;
-
     @NotBlank
     @ApiModelProperty(value = "用户名称")
     private String username;
