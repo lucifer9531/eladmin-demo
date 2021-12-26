@@ -2,7 +2,7 @@ package com.google.config;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.google.utils.SecurityUtils;
-import org.apache.commons.lang3.StringUtils;
+import com.google.utils.StringUtils;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 

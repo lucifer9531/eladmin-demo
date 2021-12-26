@@ -1,5 +1,6 @@
 package com.google.controller;
 
+import com.google.domain.LocalStorage;
 import com.google.exception.BadRequestException;
 import com.google.service.LocalStorageService;
 import com.google.service.dto.LocalStorageQueryCriteria;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.Set;
 
 /**
  * @author iris
@@ -29,6 +31,13 @@ public class LocalStorageController {
         return ResponseEntity.ok(localStorageService.query(criteria));
     }
 
+    @PutMapping
+    @ApiOperation("修改文件")
+    public ResponseEntity<Void> update(@RequestBody LocalStorage resources) {
+        localStorageService.update(resources);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
+
     @PostMapping("/pictures")
     @ApiOperation("上传图片")
     public ResponseEntity<Void> upload(@RequestParam MultipartFile file) {
@@ -38,6 +47,13 @@ public class LocalStorageController {
             throw new BadRequestException("只能上传图片");
         }
         localStorageService.create(null, file);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping
+    @ApiOperation("多选删除")
+    public ResponseEntity<Void> delete(@RequestBody Set<Long> ids) {
+        localStorageService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

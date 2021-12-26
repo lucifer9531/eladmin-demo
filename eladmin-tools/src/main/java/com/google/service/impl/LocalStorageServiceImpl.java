@@ -2,6 +2,7 @@ package com.google.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.config.FileProperties;
 import com.google.domain.LocalStorage;
@@ -11,15 +12,15 @@ import com.google.service.LocalStorageService;
 import com.google.service.dto.LocalStorageQueryCriteria;
 import com.google.service.mapstruct.LocalStorageConvert;
 import com.google.utils.FileUtil;
+import com.google.utils.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * @author iris
@@ -70,5 +71,22 @@ public class LocalStorageServiceImpl implements LocalStorageService {
             FileUtil.del(file);
             throw e;
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void update(LocalStorage resources) {
+        LocalStorage localStorage = localStorageMapper.selectById(resources.getId());
+        LambdaUpdateWrapper<LocalStorage> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(LocalStorage::getId, resources.getId())
+                .set(LocalStorage::getName, resources.getName());
+        ValidationUtil.isNull(localStorage.getId(),"LocalStorage","id",resources.getId());
+        localStorageMapper.update(localStorage, wrapper);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteAll(Set<Long> ids) {
+        localStorageMapper.deleteBatchIds(ids);
     }
 }
