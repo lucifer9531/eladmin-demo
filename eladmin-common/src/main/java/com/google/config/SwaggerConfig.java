@@ -58,10 +58,10 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .description("一个简单且易上手的 Spring boot 后台管理框架")
+                .description("Spring boot，Mybatis-Plus，Spring Security等")
                 .title("ant-design-pro 接口文档")
                 .contact(new Contact("baixuepeng", "", ""))
-                .version("2.6")
+                .version("1.0")
                 .build();
     }
 
