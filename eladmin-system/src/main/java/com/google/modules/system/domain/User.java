@@ -1,17 +1,21 @@
 package com.google.modules.system.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.ibatis.mapping.FetchType;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author iris
@@ -24,6 +28,10 @@ public class User implements Serializable {
     @TableId(value = "user_id", type = IdType.AUTO)
     @ApiModelProperty(value = "ID", hidden = true)
     private Long id;
+
+    @ApiModelProperty(value = "用户角色")
+    @TableField(exist = false)
+    private Set<Role> roles;
 
     @NotBlank
     @ApiModelProperty(value = "用户名称")

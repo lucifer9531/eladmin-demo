@@ -7,6 +7,8 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author iris
@@ -19,6 +21,10 @@ public class JwtUserDTO implements UserDetails {
 
     @JSONField(serialize = false)
     private final List<GrantedAuthority> authorities;
+
+    public Set<String> getRoles() {
+        return authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+    }
 
     @Override
     @JSONField(serialize = false)
