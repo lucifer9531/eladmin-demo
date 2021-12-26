@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @author iris
  */
-public interface BaseMapper<D, E> {
+public interface BaseConvert<D, E> {
 
     /**
      * DTO转Entity
