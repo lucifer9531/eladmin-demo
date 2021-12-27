@@ -40,7 +40,7 @@ public class RoleServiceImpl implements RoleService {
         Set<Role> roles = roleMapper.findByUserId(user.getId());
         // TODO 可能存在bug
         for (Role role : roles) {
-            Set<Menu> menus = menuMapper.findMenuByRoleId(role.getRoleId());
+            Set<Menu> menus = menuMapper.findMenuByRoleId(role.getId());
             role.setMenus(menus);
         }
         permissions = roles.stream().flatMap(role -> role.getMenus().stream())

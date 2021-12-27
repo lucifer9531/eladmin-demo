@@ -17,14 +17,13 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-@ToString
 @EqualsAndHashCode(callSuper = false)
 @TableName(value = "sys_menu")
 public class Menu extends BaseEntity implements Serializable {
 
     @ApiModelProperty(value = "ID", hidden = true)
     @TableId(value = "menu_id", type = IdType.AUTO)
-    private Long menuId;
+    private Long id;
 
     @ApiModelProperty(value = "权限标识")
     private String permission;
