@@ -29,10 +29,6 @@ public class Role extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "ID", hidden = true)
     private Long id;
 
-    @ApiModelProperty(value = "菜单", hidden = true)
-    @TableField(exist = false)
-    private Set<Menu> menus;
-
     @NotBlank
     @ApiModelProperty(value = "名称", hidden = true)
     private String name;

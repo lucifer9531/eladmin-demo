@@ -1,6 +1,7 @@
 package com.google.base;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author iris
@@ -34,4 +35,18 @@ public interface BaseConvert<D, E> {
      * @return /
      */
     List <D> toDto(List<E> entityList);
+
+    /**
+     * DTO集合转Entity集合
+     * @param dtoList /
+     * @return /
+     */
+    Set <E> toEntity(Set<D> dtoList);
+
+    /**
+     * Entity集合转DTO集合
+     * @param entityList /
+     * @return /
+     */
+    Set <D> toDto(Set<E> entityList);
 }

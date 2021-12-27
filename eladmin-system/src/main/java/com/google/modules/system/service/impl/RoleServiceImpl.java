@@ -5,7 +5,11 @@ import com.google.modules.system.domain.Role;
 import com.google.modules.system.mapper.MenuMapper;
 import com.google.modules.system.mapper.RoleMapper;
 import com.google.modules.system.service.RoleService;
+import com.google.modules.system.service.dto.MenuDTO;
+import com.google.modules.system.service.dto.RoleDTO;
 import com.google.modules.system.service.dto.UserDTO;
+import com.google.modules.system.service.mapstruct.MenuConvert;
+import com.google.modules.system.service.mapstruct.RoleConvert;
 import com.google.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
@@ -27,6 +31,8 @@ public class RoleServiceImpl implements RoleService {
 
     private final RoleMapper roleMapper;
     private final MenuMapper menuMapper;
+    private final RoleConvert roleConvert;
+    private final MenuConvert menuConvert;
 
     @Override
     public List<GrantedAuthority> mapToGrantedAuthorities(UserDTO user) {
@@ -37,15 +43,15 @@ public class RoleServiceImpl implements RoleService {
             return permissions.stream().map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
         }
-        Set<Role> roles = roleMapper.findByUserId(user.getId());
+        Set<RoleDTO> roles = roleConvert.toDto(roleMapper.findByUserId(user.getId()));
         // TODO 可能存在bug
-        for (Role role : roles) {
-            Set<Menu> menus = menuMapper.findMenuByRoleId(role.getId());
-            role.setMenus(menus);
+        for (RoleDTO roleDto : roles) {
+            Set<MenuDTO> menus = menuConvert.toDto(menuMapper.findMenuByRoleId(roleDto.getId()));
+            roleDto.setMenus(menus);
         }
         permissions = roles.stream().flatMap(role -> role.getMenus().stream())
                 .filter(menu -> StringUtils.isNotBlank(menu.getPermission()))
-                .map(Menu::getPermission).collect(Collectors.toSet());
+                .map(MenuDTO::getPermission).collect(Collectors.toSet());
         return permissions.stream().map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
