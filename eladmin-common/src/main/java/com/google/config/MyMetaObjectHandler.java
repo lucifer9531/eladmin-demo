@@ -16,16 +16,15 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        this.strictInsertFill(metaObject, "createTime", Timestamp.class, new Timestamp(System.currentTimeMillis()));
-        this.strictInsertFill(metaObject, "createBy", String.class, StringUtils.isBlank(SecurityUtils.getCurrentUsername()) ? "System" : SecurityUtils.getCurrentUsername());
-        this.strictInsertFill(metaObject, "updateTime", Timestamp.class, new Timestamp(System.currentTimeMillis()));
-        this.strictInsertFill(metaObject, "updateBy", String.class, StringUtils.isBlank(SecurityUtils.getCurrentUsername()) ? "System" : SecurityUtils.getCurrentUsername());
+        this.setFieldValByName("createTime", new Timestamp(System.currentTimeMillis()), metaObject);
+        this.setFieldValByName("createBy", StringUtils.isBlank(SecurityUtils.getCurrentUsername()) ? "System" : SecurityUtils.getCurrentUsername(), metaObject);
+        this.setFieldValByName("updateTime", new Timestamp(System.currentTimeMillis()), metaObject);
+        this.setFieldValByName("updateBy", StringUtils.isBlank(SecurityUtils.getCurrentUsername()) ? "System" : SecurityUtils.getCurrentUsername(), metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        // TODO bug 不生效
-        this.strictUpdateFill(metaObject, "updateTime", Timestamp.class, new Timestamp(System.currentTimeMillis()));
-        this.strictUpdateFill(metaObject, "updateBy", String.class, StringUtils.isBlank(SecurityUtils.getCurrentUsername()) ? "System" : SecurityUtils.getCurrentUsername());
+        this.setFieldValByName("updateTime", new Timestamp(System.currentTimeMillis()), metaObject);
+        this.setFieldValByName("updateBy", StringUtils.isBlank(SecurityUtils.getCurrentUsername()) ? "System" : SecurityUtils.getCurrentUsername(), metaObject);
     }
 }
