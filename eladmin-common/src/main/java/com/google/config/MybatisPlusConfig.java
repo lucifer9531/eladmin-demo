@@ -17,14 +17,4 @@ public class MybatisPlusConfig {
     public PaginationInterceptor paginationInterceptor() {
         return new PaginationInterceptor();
     }
-
-    /**
-     * 自动填充功能
-     */
-    @Bean
-    public GlobalConfig globalConfig() {
-        GlobalConfig globalConfig = new GlobalConfig();
-        globalConfig.setMetaObjectHandler(new MyMetaObjectHandler());
-        return globalConfig;
-    }
 }

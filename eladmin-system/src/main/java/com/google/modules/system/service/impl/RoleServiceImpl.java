@@ -1,7 +1,5 @@
 package com.google.modules.system.service.impl;
 
-import com.google.modules.system.domain.Menu;
-import com.google.modules.system.domain.Role;
 import com.google.modules.system.mapper.MenuMapper;
 import com.google.modules.system.mapper.RoleMapper;
 import com.google.modules.system.service.RoleService;
@@ -44,7 +42,6 @@ public class RoleServiceImpl implements RoleService {
                     .collect(Collectors.toList());
         }
         Set<RoleDTO> roles = roleConvert.toDto(roleMapper.findByUserId(user.getId()));
-        // TODO 可能存在bug
         for (RoleDTO roleDto : roles) {
             Set<MenuDTO> menus = menuConvert.toDto(menuMapper.findMenuByRoleId(roleDto.getId()));
             roleDto.setMenus(menus);
