@@ -1,5 +1,6 @@
 package com.google.controller;
 
+import com.google.annotation.Log;
 import com.google.domain.LocalStorage;
 import com.google.exception.BadRequestException;
 import com.google.service.LocalStorageService;
@@ -26,6 +27,7 @@ public class LocalStorageController {
 
     private final LocalStorageService localStorageService;
 
+    @Log("存储管理：查询文件")
     @PostMapping
     @PreAuthorize("@el.check('storage:list')")
     @ApiOperation("查询文件")
@@ -33,6 +35,7 @@ public class LocalStorageController {
         return ResponseEntity.ok(localStorageService.query(criteria));
     }
 
+    @Log("存储管理：修改文件")
     @PutMapping
     @ApiOperation("修改文件")
     @PreAuthorize("@el.check('storage:edit')")
@@ -41,6 +44,7 @@ public class LocalStorageController {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
+    @Log("存储管理：上传文件")
     @PostMapping("/pictures")
     @ApiOperation("上传图片")
     @PreAuthorize("@el.check('storage:add')")
@@ -54,6 +58,7 @@ public class LocalStorageController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Log("存储管理：多选删除")
     @DeleteMapping
     @ApiOperation("多选删除")
     @PreAuthorize("@el.check('storage:del')")

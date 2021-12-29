@@ -22,12 +22,6 @@
         <!-- tools 模块包含了 common 和 logging 模块 -->
         <dependency>
             <groupId>com.google</groupId>
-            <artifactId>eladmin-common</artifactId>
-            <version>1.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google</groupId>
             <artifactId>eladmin-tools</artifactId>
             <version>1.0</version>
         </dependency>
