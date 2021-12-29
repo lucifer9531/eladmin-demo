@@ -27,7 +27,7 @@ public class LocalStorageController {
     private final LocalStorageService localStorageService;
 
     @PostMapping
-    @PreAuthorize("@el.check('user:list')")
+    @PreAuthorize("@el.check('storage:list')")
     @ApiOperation("查询文件")
     public ResponseEntity<Object> query(@RequestBody LocalStorageQueryCriteria criteria) {
         return ResponseEntity.ok(localStorageService.query(criteria));
@@ -35,6 +35,7 @@ public class LocalStorageController {
 
     @PutMapping
     @ApiOperation("修改文件")
+    @PreAuthorize("@el.check('storage:edit')")
     public ResponseEntity<Void> update(@RequestBody LocalStorage resources) {
         localStorageService.update(resources);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
@@ -42,6 +43,7 @@ public class LocalStorageController {
 
     @PostMapping("/pictures")
     @ApiOperation("上传图片")
+    @PreAuthorize("@el.check('storage:add')")
     public ResponseEntity<Void> upload(@RequestParam MultipartFile file) {
         // 判断文件是否时图片
         String suffix = FileUtil.getExtensionName(file.getOriginalFilename());
@@ -54,6 +56,7 @@ public class LocalStorageController {
 
     @DeleteMapping
     @ApiOperation("多选删除")
+    @PreAuthorize("@el.check('storage:del')")
     public ResponseEntity<Void> delete(@RequestBody Set<Long> ids) {
         localStorageService.deleteAll(ids);
         return new ResponseEntity<>(HttpStatus.OK);
