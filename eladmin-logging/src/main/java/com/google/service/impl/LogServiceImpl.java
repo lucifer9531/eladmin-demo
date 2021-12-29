@@ -1,5 +1,7 @@
 package com.google.service.impl;
 
+import cn.hutool.core.lang.Dict;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,16 +11,18 @@ import com.google.service.LogService;
 import com.google.service.dto.LogQueryCriteria;
 import com.google.utils.SecurityUtils;
 import com.google.utils.StringUtils;
+import com.google.utils.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +38,7 @@ public class LogServiceImpl implements LogService {
     private final LogMapper logMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, Log log) {
         if (log == null) {
             throw new IllegalArgumentException("Log 不能为 null!");
@@ -68,6 +73,30 @@ public class LogServiceImpl implements LogService {
             put("total", logPage.getTotal());
             put("list", logPage.getRecords());
         }};
+    }
+
+    @Override
+    public Object findByErrDetail(Long id) {
+        Log log = logMapper.selectById(id);
+        ValidationUtil.isNull(log.getId(), "Log", "id", id);
+        byte[] details = log.getExceptionDetail();
+        return Dict.create().set("exception", new String(ObjectUtil.isNotNull(details) ? details : "".getBytes(StandardCharsets.UTF_8)));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delAllByError() {
+        LambdaQueryWrapper<Log> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Log::getLogType, "ERROR");
+        logMapper.delete(wrapper);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void delAllByInfo() {
+        LambdaQueryWrapper<Log> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Log::getLogType, "INFO");
+        logMapper.delete(wrapper);
     }
 
     private String getParameter(Method method, Object[] args) {

@@ -11,4 +11,10 @@ public interface LogService {
     void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, Log log);
 
     Object query(LogQueryCriteria criteria);
+
+    Object findByErrDetail(Long id);
+
+    void delAllByError();
+
+    void delAllByInfo();
 }
