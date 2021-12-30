@@ -15,6 +15,7 @@
         <module>eladmin-tools</module>
         <module>eladmin-logging</module>
         <module>eladmin-generator</module>
+        <module>eladmin-search</module>
     </modules>
 
     <name>ANT-DESIGN-PRO 后台管理</name>

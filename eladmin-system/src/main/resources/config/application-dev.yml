@@ -48,6 +48,9 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+  elasticsearch:
+    rest:
+      uris: localhost:9200
 
 # 登录相关配置
 login:
